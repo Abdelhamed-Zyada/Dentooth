@@ -1,5 +1,6 @@
 package com.example.dentooth.feature.patient.ui.detail
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +20,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -46,8 +47,12 @@ import com.example.dentooth.core.designsystem.components.DentoothLoadingState
 import com.example.dentooth.core.designsystem.components.DentoothStatusBadge
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
 import com.example.dentooth.core.util.DateTimeUtil
+import com.example.dentooth.feature.dentalchart.ui.DentalChartTab
+import com.example.dentooth.feature.dentalchart.ui.DentalChartViewModel
 import com.example.dentooth.feature.patient.domain.model.Patient
 import com.example.dentooth.feature.patient.ui.form.PatientFormScreen
+import com.example.dentooth.feature.treatment.ui.TreatmentPlansTab
+import com.example.dentooth.feature.treatment.ui.TreatmentViewModel
 import org.koin.core.parameter.parametersOf
 
 data class PatientDetailScreen(val patientId: String) : Screen {
@@ -55,9 +60,13 @@ data class PatientDetailScreen(val patientId: String) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = koinScreenModel<PatientDetailViewModel> { parametersOf(patientId) }
-        val state by viewModel.uiState.collectAsState()
+        val patientViewModel = koinScreenModel<PatientDetailViewModel> { parametersOf(patientId) }
+        val dentalChartViewModel = koinScreenModel<DentalChartViewModel> { parametersOf(patientId) }
+        val treatmentViewModel = koinScreenModel<TreatmentViewModel> { parametersOf(patientId) }
+
+        val state by patientViewModel.uiState.collectAsState()
         var showDeleteDialog by remember { mutableStateOf(false) }
+        var selectedToothForProcedure by remember { mutableStateOf<Int?>(null) }
 
         if (showDeleteDialog) {
             DentoothConfirmDialog(
@@ -67,7 +76,7 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                 isDestructive = true,
                 onConfirm = {
                     showDeleteDialog = false
-                    viewModel.deletePatient { navigator.pop() }
+                    patientViewModel.deletePatient { navigator.pop() }
                 },
                 onDismiss = { showDeleteDialog = false }
             )
@@ -100,7 +109,7 @@ data class PatientDetailScreen(val patientId: String) : Screen {
             } else if (patient == null) {
                 DentoothErrorState(
                     message = "Could not load patient details",
-                    onRetry = { viewModel.loadData() }
+                    onRetry = { patientViewModel.loadData() }
                 )
             } else {
                 Column(
@@ -111,49 +120,68 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                     // Patient Header Card
                     PatientHeaderSection(patient = patient)
 
-                    // Navigation Tabs
-                    TabRow(
+                    // Navigation Tabs: Overview, Dental Chart, Treatment Plans, Medical History, Notes
+                    PrimaryTabRow(
                         selectedTabIndex = state.selectedTab,
                         containerColor = MaterialTheme.colorScheme.surface,
                         contentColor = MaterialTheme.colorScheme.primary
                     ) {
                         Tab(
                             selected = state.selectedTab == 0,
-                            onClick = { viewModel.selectTab(0) },
+                            onClick = { patientViewModel.selectTab(0) },
                             text = { Text("Overview") }
                         )
                         Tab(
                             selected = state.selectedTab == 1,
-                            onClick = { viewModel.selectTab(1) },
-                            text = { Text("Medical History") }
+                            onClick = { patientViewModel.selectTab(1) },
+                            text = { Text("🦷 Chart") }
                         )
                         Tab(
                             selected = state.selectedTab == 2,
-                            onClick = { viewModel.selectTab(2) },
-                            text = { Text("Notes") }
+                            onClick = { patientViewModel.selectTab(2) },
+                            text = { Text("📋 Plans") }
+                        )
+                        Tab(
+                            selected = state.selectedTab == 3,
+                            onClick = { patientViewModel.selectTab(3) },
+                            text = { Text("🩺 History") }
+                        )
+                        Tab(
+                            selected = state.selectedTab == 4,
+                            onClick = { patientViewModel.selectTab(4) },
+                            text = { Text("📝 Notes") }
                         )
                     }
 
                     // Tab Content
                     when (state.selectedTab) {
                         0 -> OverviewTab(patient)
-                        1 -> {
+                        1 -> DentalChartTab(
+                            viewModel = dentalChartViewModel,
+                            onPlanProcedure = { toothNum ->
+                                selectedToothForProcedure = toothNum
+                                patientViewModel.selectTab(2) // Jump to Treatment Plans
+                            }
+                        )
+                        2 -> TreatmentPlansTab(
+                            viewModel = treatmentViewModel,
+                            initialToothNumberForNewProcedure = selectedToothForProcedure
+                        )
+                        3 -> {
                             val medHistory = state.medicalHistoryState.dataOrNull()
                             if (medHistory != null) {
                                 MedicalHistoryTab(
                                     medicalHistory = medHistory,
                                     isSaving = state.isSavingMedicalHistory,
-                                    onSave = { viewModel.updateMedicalHistory(it) }
+                                    onSave = { patientViewModel.updateMedicalHistory(it) }
                                 )
                             } else {
                                 DentoothLoadingState(message = "Loading medical history...")
                             }
                         }
-                        2 -> PatientNotesTab(
+                        4 -> PatientNotesTab(
                             patient = patient,
-                            onSaveNotes = { notes ->
-                                // Save notes via form repo or patient update
-                            }
+                            onSaveNotes = { notes -> }
                         )
                     }
                 }
@@ -173,11 +201,11 @@ data class PatientDetailScreen(val patientId: String) : Screen {
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(14.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     DentoothAvatar(
                         name = patient.fullName,
-                        size = 64.dp
+                        size = 56.dp
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
@@ -196,20 +224,12 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                                 textColor = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = "${patient.gender.displayName}${if (age != null) " • $age years" else ""} • ${patient.phone}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        if (patient.bloodType != null) {
-                            Text(
-                                text = "Blood Type: ${patient.bloodType}",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
                     }
                 }
             }
