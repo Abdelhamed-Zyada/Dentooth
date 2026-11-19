@@ -3,6 +3,9 @@ package com.example.dentooth.core.di
 import com.example.dentooth.core.auth.data.AuthRepository
 import com.example.dentooth.core.auth.data.AuthRepositoryImpl
 import com.example.dentooth.core.auth.ui.LoginViewModel
+import com.example.dentooth.feature.billing.data.BillingRepository
+import com.example.dentooth.feature.billing.data.BillingRepositoryImpl
+import com.example.dentooth.feature.billing.ui.BillingViewModel
 import com.example.dentooth.feature.calendar.data.CalendarRepository
 import com.example.dentooth.feature.calendar.data.CalendarRepositoryImpl
 import com.example.dentooth.feature.calendar.ui.CalendarViewModel
@@ -30,6 +33,7 @@ val dataModule = module {
     single<TreatmentRepository> { TreatmentRepositoryImpl() }
     single<ImagingRepository> { ImagingRepositoryImpl() }
     single<CalendarRepository> { CalendarRepositoryImpl() }
+    single<BillingRepository> { BillingRepositoryImpl() }
 }
 
 val viewModelModule = module {
@@ -42,6 +46,7 @@ val viewModelModule = module {
     factory { (patientId: String) -> TreatmentViewModel(patientId, get()) }
     factory { (patientId: String) -> ImagingViewModel(patientId, get()) }
     factory { CalendarViewModel(get()) }
+    factory { BillingViewModel(get()) }
 }
 
 val appModule = listOf(dataModule, viewModelModule)

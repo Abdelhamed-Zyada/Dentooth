@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.example.dentooth.feature.billing.ui.BillingScreen
 import com.example.dentooth.feature.calendar.ui.CalendarScreen
 import com.example.dentooth.feature.dashboard.ui.DashboardScreen
 import com.example.dentooth.feature.patient.ui.list.PatientListScreen
@@ -92,7 +93,6 @@ object BillingTab : Tab {
 
     @Composable
     override fun Content() {
-        // Billing shell
-        DashboardScreen().Content()
+        Navigator(BillingScreen())
     }
 }
