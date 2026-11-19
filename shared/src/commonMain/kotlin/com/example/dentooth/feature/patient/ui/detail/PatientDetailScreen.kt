@@ -49,6 +49,8 @@ import com.example.dentooth.core.designsystem.components.DentoothTopBar
 import com.example.dentooth.core.util.DateTimeUtil
 import com.example.dentooth.feature.dentalchart.ui.DentalChartTab
 import com.example.dentooth.feature.dentalchart.ui.DentalChartViewModel
+import com.example.dentooth.feature.imaging.ui.ImagingViewModel
+import com.example.dentooth.feature.imaging.ui.PatientImagesTab
 import com.example.dentooth.feature.patient.domain.model.Patient
 import com.example.dentooth.feature.patient.ui.form.PatientFormScreen
 import com.example.dentooth.feature.treatment.ui.TreatmentPlansTab
@@ -63,6 +65,7 @@ data class PatientDetailScreen(val patientId: String) : Screen {
         val patientViewModel = koinScreenModel<PatientDetailViewModel> { parametersOf(patientId) }
         val dentalChartViewModel = koinScreenModel<DentalChartViewModel> { parametersOf(patientId) }
         val treatmentViewModel = koinScreenModel<TreatmentViewModel> { parametersOf(patientId) }
+        val imagingViewModel = koinScreenModel<ImagingViewModel> { parametersOf(patientId) }
 
         val state by patientViewModel.uiState.collectAsState()
         var showDeleteDialog by remember { mutableStateOf(false) }
@@ -120,7 +123,7 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                     // Patient Header Card
                     PatientHeaderSection(patient = patient)
 
-                    // Navigation Tabs: Overview, Dental Chart, Treatment Plans, Medical History, Notes
+                    // Navigation Tabs: Overview, Dental Chart, Treatment Plans, Images, Medical History, Notes
                     PrimaryTabRow(
                         selectedTabIndex = state.selectedTab,
                         containerColor = MaterialTheme.colorScheme.surface,
@@ -144,11 +147,16 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                         Tab(
                             selected = state.selectedTab == 3,
                             onClick = { patientViewModel.selectTab(3) },
-                            text = { Text("🩺 History") }
+                            text = { Text("📷 X-Rays") }
                         )
                         Tab(
                             selected = state.selectedTab == 4,
                             onClick = { patientViewModel.selectTab(4) },
+                            text = { Text("🩺 History") }
+                        )
+                        Tab(
+                            selected = state.selectedTab == 5,
+                            onClick = { patientViewModel.selectTab(5) },
                             text = { Text("📝 Notes") }
                         )
                     }
@@ -167,7 +175,10 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                             viewModel = treatmentViewModel,
                             initialToothNumberForNewProcedure = selectedToothForProcedure
                         )
-                        3 -> {
+                        3 -> PatientImagesTab(
+                            viewModel = imagingViewModel
+                        )
+                        4 -> {
                             val medHistory = state.medicalHistoryState.dataOrNull()
                             if (medHistory != null) {
                                 MedicalHistoryTab(
@@ -179,9 +190,9 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                                 DentoothLoadingState(message = "Loading medical history...")
                             }
                         }
-                        4 -> PatientNotesTab(
+                        5 -> PatientNotesTab(
                             patient = patient,
-                            onSaveNotes = { notes -> }
+                            onSaveNotes = { notes -> patientViewModel.updatePatientNotes(notes) }
                         )
                     }
                 }

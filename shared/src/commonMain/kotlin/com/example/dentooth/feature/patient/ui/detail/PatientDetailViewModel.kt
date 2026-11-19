@@ -68,6 +68,15 @@ class PatientDetailViewModel(
         }
     }
 
+    fun updatePatientNotes(notes: String) {
+        val currentPatient = _uiState.value.patientState.dataOrNull() ?: return
+        screenModelScope.launch {
+            val updated = currentPatient.copy(notes = notes.trim())
+            patientRepository.savePatient(updated)
+            _uiState.value = _uiState.value.copy(patientState = UiState.Success(updated))
+        }
+    }
+
     fun deletePatient(onComplete: () -> Unit) {
         screenModelScope.launch {
             patientRepository.deletePatient(patientId)

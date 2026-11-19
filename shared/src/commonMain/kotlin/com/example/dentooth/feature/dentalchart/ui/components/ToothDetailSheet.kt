@@ -19,11 +19,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -33,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import com.example.dentooth.core.designsystem.DentoothColors
 import com.example.dentooth.core.designsystem.components.DentoothFormField
 import com.example.dentooth.core.designsystem.components.DentoothStatusBadge
+import com.example.dentooth.core.util.DateTimeUtil
 import com.example.dentooth.feature.dentalchart.domain.model.ToothCondition
 import com.example.dentooth.feature.dentalchart.domain.model.ToothRecord
 import com.example.dentooth.feature.dentalchart.domain.model.ToothStatus
@@ -68,6 +71,17 @@ fun ToothDetailSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedSurface by remember { mutableStateOf<ToothSurface?>(null) }
     var showConditionDialog by remember { mutableStateOf(false) }
+
+    if (showConditionDialog) {
+        AddConditionDialog(
+            toothNumber = tooth.toothNumber,
+            onDismiss = { showConditionDialog = false },
+            onConfirm = { condition ->
+                showConditionDialog = false
+                onAddCondition(condition)
+            }
+        )
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -355,4 +369,141 @@ private fun SurfaceChip(
             fontSize = 10.sp
         )
     }
+}
+
+@Composable
+fun AddConditionDialog(
+    toothNumber: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (ToothCondition) -> Unit
+) {
+    val commonConditions = listOf(
+        "Deep Dentinal Caries",
+        "Enamel Caries",
+        "Enamel Fracture",
+        "Cusp Fracture",
+        "Periapical Abscess / Lesion",
+        "Irreversible Pulpitis",
+        "Mobility Grade 1",
+        "Severe Attrition / Bruxism",
+        "Cervical Abrasion"
+    )
+
+    var selectedType by remember { mutableStateOf(commonConditions.first()) }
+    var severity by remember { mutableStateOf("Moderate") }
+    val selectedSurfaces = remember { mutableStateOf(setOf<ToothSurface>()) }
+    var notes by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Add Condition to #$toothNumber",
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = "Condition Type:",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    commonConditions.take(5).forEach { type ->
+                        FilterChip(
+                            selected = selectedType == type,
+                            onClick = { selectedType = type },
+                            label = { Text(type, fontSize = 12.sp) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        )
+                    }
+                }
+
+                Text(
+                    text = "Involved Surfaces:",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ToothSurface.entries.forEach { surf ->
+                        val isChecked = selectedSurfaces.value.contains(surf)
+                        FilterChip(
+                            selected = isChecked,
+                            onClick = {
+                                selectedSurfaces.value = if (isChecked) {
+                                    selectedSurfaces.value - surf
+                                } else {
+                                    selectedSurfaces.value + surf
+                                }
+                            },
+                            label = { Text(surf.code) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        )
+                    }
+                }
+
+                Text(
+                    text = "Severity:",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("Mild", "Moderate", "Severe").forEach { sev ->
+                        FilterChip(
+                            selected = severity == sev,
+                            onClick = { severity = sev },
+                            label = { Text(sev) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        )
+                    }
+                }
+
+                DentoothFormField(
+                    value = notes,
+                    onValueChange = { notes = it },
+                    label = "Clinical Notes",
+                    placeholder = "Observations or thermal test response"
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    val condition = ToothCondition(
+                        id = "cond-${DateTimeUtil.currentInstant().toEpochMilliseconds()}",
+                        toothNumber = toothNumber,
+                        type = selectedType,
+                        surfaces = selectedSurfaces.value.toList(),
+                        severity = severity,
+                        notes = notes.trim().ifEmpty { null },
+                        diagnosedAt = DateTimeUtil.formatDate(DateTimeUtil.today())
+                    )
+                    onConfirm(condition)
+                }
+            ) {
+                Text("Save Condition", fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }

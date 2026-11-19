@@ -7,6 +7,9 @@ import com.example.dentooth.feature.dashboard.ui.DashboardViewModel
 import com.example.dentooth.feature.dentalchart.data.DentalChartRepository
 import com.example.dentooth.feature.dentalchart.data.DentalChartRepositoryImpl
 import com.example.dentooth.feature.dentalchart.ui.DentalChartViewModel
+import com.example.dentooth.feature.imaging.data.ImagingRepository
+import com.example.dentooth.feature.imaging.data.ImagingRepositoryImpl
+import com.example.dentooth.feature.imaging.ui.ImagingViewModel
 import com.example.dentooth.feature.patient.data.PatientRepository
 import com.example.dentooth.feature.patient.data.PatientRepositoryImpl
 import com.example.dentooth.feature.patient.ui.detail.PatientDetailViewModel
@@ -22,6 +25,7 @@ val dataModule = module {
     single<PatientRepository> { PatientRepositoryImpl() }
     single<DentalChartRepository> { DentalChartRepositoryImpl() }
     single<TreatmentRepository> { TreatmentRepositoryImpl() }
+    single<ImagingRepository> { ImagingRepositoryImpl() }
 }
 
 val viewModelModule = module {
@@ -32,6 +36,7 @@ val viewModelModule = module {
     factory { (patientId: String) -> PatientDetailViewModel(patientId, get()) }
     factory { (patientId: String) -> DentalChartViewModel(patientId, get()) }
     factory { (patientId: String) -> TreatmentViewModel(patientId, get()) }
+    factory { (patientId: String) -> ImagingViewModel(patientId, get()) }
 }
 
 val appModule = listOf(dataModule, viewModelModule)
