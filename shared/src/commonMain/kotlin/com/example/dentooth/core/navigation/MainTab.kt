@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.example.dentooth.feature.calendar.ui.CalendarScreen
 import com.example.dentooth.feature.dashboard.ui.DashboardScreen
 import com.example.dentooth.feature.patient.ui.list.PatientListScreen
 
@@ -71,8 +72,7 @@ object CalendarTab : Tab {
 
     @Composable
     override fun Content() {
-        // Calendar shell for Phase 1 / Phase 3
-        DashboardScreen().Content()
+        Navigator(CalendarScreen())
     }
 }
 
