@@ -3,6 +3,19 @@ package com.example.dentooth.core.di
 import com.example.dentooth.core.auth.data.AuthRepository
 import com.example.dentooth.core.auth.data.AuthRepositoryImpl
 import com.example.dentooth.core.auth.ui.LoginViewModel
+import com.example.dentooth.feature.admin.analytics.data.AnalyticsRepository
+import com.example.dentooth.feature.admin.analytics.data.AnalyticsRepositoryImpl
+import com.example.dentooth.feature.admin.analytics.ui.AnalyticsViewModel
+import com.example.dentooth.feature.admin.branch.data.BranchRepository
+import com.example.dentooth.feature.admin.branch.data.BranchRepositoryImpl
+import com.example.dentooth.feature.admin.inventory.data.InventoryRepository
+import com.example.dentooth.feature.admin.inventory.data.InventoryRepositoryImpl
+import com.example.dentooth.feature.admin.inventory.ui.InventoryViewModel
+import com.example.dentooth.feature.admin.settings.data.SettingsRepository
+import com.example.dentooth.feature.admin.settings.data.SettingsRepositoryImpl
+import com.example.dentooth.feature.admin.staff.data.StaffRepository
+import com.example.dentooth.feature.admin.staff.data.StaffRepositoryImpl
+import com.example.dentooth.feature.admin.staff.ui.StaffViewModel
 import com.example.dentooth.feature.billing.data.BillingRepository
 import com.example.dentooth.feature.billing.data.BillingRepositoryImpl
 import com.example.dentooth.feature.billing.ui.BillingViewModel
@@ -34,11 +47,16 @@ val dataModule = module {
     single<ImagingRepository> { ImagingRepositoryImpl() }
     single<CalendarRepository> { CalendarRepositoryImpl() }
     single<BillingRepository> { BillingRepositoryImpl() }
+    single<InventoryRepository> { InventoryRepositoryImpl() }
+    single<StaffRepository> { StaffRepositoryImpl() }
+    single<BranchRepository> { BranchRepositoryImpl() }
+    single<SettingsRepository> { SettingsRepositoryImpl() }
+    single<AnalyticsRepository> { AnalyticsRepositoryImpl() }
 }
 
 val viewModelModule = module {
     factory { LoginViewModel(get()) }
-    factory { DashboardViewModel(get(), get()) }
+    factory { DashboardViewModel(get(), get(), get(), get(), get(), get()) }
     factory { PatientListViewModel(get()) }
     factory { (patientId: String?) -> PatientFormViewModel(patientId, get()) }
     factory { (patientId: String) -> PatientDetailViewModel(patientId, get()) }
@@ -47,6 +65,9 @@ val viewModelModule = module {
     factory { (patientId: String) -> ImagingViewModel(patientId, get()) }
     factory { CalendarViewModel(get()) }
     factory { BillingViewModel(get()) }
+    factory { InventoryViewModel(get()) }
+    factory { StaffViewModel(get()) }
+    factory { AnalyticsViewModel(get()) }
 }
 
 val appModule = listOf(dataModule, viewModelModule)
