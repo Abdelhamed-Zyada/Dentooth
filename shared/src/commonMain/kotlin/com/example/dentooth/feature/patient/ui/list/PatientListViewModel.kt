@@ -91,4 +91,26 @@ class PatientListViewModel(
             patientRepository.deletePatient(patientId)
         }
     }
+
+    fun createGroup(name: String, colorHex: String, description: String?) {
+        screenModelScope.launch {
+            val newGroup = PatientGroup(
+                id = "",
+                name = name.trim(),
+                colorHex = colorHex,
+                description = description?.trim()
+            )
+            patientRepository.savePatientGroup(newGroup).onSuccess {
+                loadGroups()
+            }
+        }
+    }
+
+    fun deleteGroup(groupId: String) {
+        screenModelScope.launch {
+            patientRepository.deletePatientGroup(groupId).onSuccess {
+                loadGroups()
+            }
+        }
+    }
 }

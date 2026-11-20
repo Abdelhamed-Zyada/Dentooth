@@ -130,7 +130,7 @@ class PatientRepositoryImpl : PatientRepository {
         )
     )
 
-    private val seedGroups = listOf(
+    private val groupsList = mutableListOf(
         PatientGroup(id = "grp-1", name = "VIP", colorHex = "#FFB300", description = "Priority patients"),
         PatientGroup(id = "grp-2", name = "Orthodontics", colorHex = "#1B6B93", description = "Active braces/aligners"),
         PatientGroup(id = "grp-3", name = "Endo", colorHex = "#8E24AA", description = "Root canal treatments"),
@@ -194,6 +194,24 @@ class PatientRepositoryImpl : PatientRepository {
     }
 
     override suspend fun getPatientGroups(): Result<List<PatientGroup>> {
-        return Result.Success(seedGroups)
+        return Result.Success(groupsList.toList())
+    }
+
+    override suspend fun savePatientGroup(group: PatientGroup): Result<PatientGroup> {
+        val index = groupsList.indexOfFirst { it.id == group.id }
+        val saved = if (index >= 0) {
+            groupsList[index] = group
+            group
+        } else {
+            val newGroup = group.copy(id = "grp-${DateTimeUtil.currentInstant().toEpochMilliseconds()}")
+            groupsList.add(newGroup)
+            newGroup
+        }
+        return Result.Success(saved)
+    }
+
+    override suspend fun deletePatientGroup(id: String): Result<Unit> {
+        groupsList.removeAll { it.id == id }
+        return Result.Success(Unit)
     }
 }

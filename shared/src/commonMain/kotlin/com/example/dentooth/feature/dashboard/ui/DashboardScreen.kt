@@ -66,7 +66,10 @@ import com.example.dentooth.feature.admin.branch.ui.BranchSelectorSheet
 import com.example.dentooth.feature.admin.inventory.ui.InventoryScreen
 import com.example.dentooth.feature.admin.settings.ui.ClinicSettingsScreen
 import com.example.dentooth.feature.admin.staff.ui.StaffScreen
+import com.example.dentooth.feature.automation.ui.AutomationScreen
 import com.example.dentooth.feature.calendar.domain.model.Appointment
+import com.example.dentooth.feature.insurance.ui.InsuranceScreen
+import com.example.dentooth.feature.lab.ui.LabScreen
 import com.example.dentooth.feature.patient.ui.form.PatientFormScreen
 
 class DashboardScreen : Screen {
@@ -219,6 +222,41 @@ class DashboardScreen : Screen {
                         title = "Settings",
                         subtitle = "Clinic Setup",
                         onClick = { navigator.push(ClinicSettingsScreen()) }
+                    )
+                }
+
+                // Operations & Patient Engagement Shortcuts Row
+                Text(
+                    text = "Engagement & Operations",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    AdminQuickTile(
+                        icon = "🧪",
+                        title = "Dental Labs",
+                        subtitle = "Orders & Fabrication",
+                        onClick = { navigator.push(LabScreen()) }
+                    )
+
+                    AdminQuickTile(
+                        icon = "🛡️",
+                        title = "Insurance",
+                        subtitle = "Claims & Approvals",
+                        onClick = { navigator.push(InsuranceScreen()) }
+                    )
+
+                    AdminQuickTile(
+                        icon = "⚡",
+                        title = "Automations",
+                        subtitle = "SMS & WhatsApp",
+                        onClick = { navigator.push(AutomationScreen()) }
                     )
                 }
 

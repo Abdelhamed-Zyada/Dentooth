@@ -18,18 +18,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +55,7 @@ import com.example.dentooth.core.util.DateTimeUtil
 import com.example.dentooth.feature.patient.domain.model.Patient
 import com.example.dentooth.feature.patient.ui.detail.PatientDetailScreen
 import com.example.dentooth.feature.patient.ui.form.PatientFormScreen
+import com.example.dentooth.feature.patient.ui.list.components.ManageGroupsDialog
 
 class PatientListScreen : Screen {
 
@@ -58,11 +64,17 @@ class PatientListScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = koinScreenModel<PatientListViewModel>()
         val state by viewModel.state.collectAsState()
+        var showManageGroupsDialog by remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = {
                 DentoothTopBar(
-                    title = "Patients (${state.filteredPatients.size})"
+                    title = "Patients (${state.filteredPatients.size})",
+                    actions = {
+                        IconButton(onClick = { showManageGroupsDialog = true }) {
+                            Icon(Icons.Default.Settings, contentDescription = "Manage Patient Groups")
+                        }
+                    }
                 )
             },
             floatingActionButton = {
@@ -115,6 +127,11 @@ class PatientListScreen : Screen {
                                 )
                             )
                         }
+                        FilterChip(
+                            selected = false,
+                            onClick = { showManageGroupsDialog = true },
+                            label = { Text("+ Groups") }
+                        )
                     }
                 }
 
@@ -143,6 +160,20 @@ class PatientListScreen : Screen {
                     }
                 }
             }
+        }
+
+        if (showManageGroupsDialog) {
+            ManageGroupsDialog(
+                groups = state.availableGroups,
+                patients = state.patients,
+                onDismiss = { showManageGroupsDialog = false },
+                onCreateGroup = { name, colorHex, desc ->
+                    viewModel.createGroup(name, colorHex, desc)
+                },
+                onDeleteGroup = { groupId ->
+                    viewModel.deleteGroup(groupId)
+                }
+            )
         }
     }
 

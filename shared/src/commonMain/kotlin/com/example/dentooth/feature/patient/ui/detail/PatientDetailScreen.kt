@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -52,6 +53,7 @@ import com.example.dentooth.feature.dentalchart.ui.DentalChartViewModel
 import com.example.dentooth.feature.imaging.ui.ImagingViewModel
 import com.example.dentooth.feature.imaging.ui.PatientImagesTab
 import com.example.dentooth.feature.patient.domain.model.Patient
+import com.example.dentooth.feature.patient.ui.detail.components.QrMedicalHistoryDialog
 import com.example.dentooth.feature.patient.ui.form.PatientFormScreen
 import com.example.dentooth.feature.treatment.ui.TreatmentPlansTab
 import com.example.dentooth.feature.treatment.ui.TreatmentViewModel
@@ -69,6 +71,7 @@ data class PatientDetailScreen(val patientId: String) : Screen {
 
         val state by patientViewModel.uiState.collectAsState()
         var showDeleteDialog by remember { mutableStateOf(false) }
+        var showQrIntakeDialog by remember { mutableStateOf(false) }
         var selectedToothForProcedure by remember { mutableStateOf<Int?>(null) }
 
         if (showDeleteDialog) {
@@ -91,6 +94,9 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                     title = "Patient Profile",
                     onBackClick = { navigator.pop() },
                     actions = {
+                        IconButton(onClick = { showQrIntakeDialog = true }) {
+                            Icon(Icons.Default.Share, contentDescription = "QR Medical Intake")
+                        }
                         IconButton(onClick = { navigator.push(PatientFormScreen(patientId)) }) {
                             Icon(Icons.Default.Edit, contentDescription = "Edit")
                         }
@@ -197,6 +203,18 @@ data class PatientDetailScreen(val patientId: String) : Screen {
                     }
                 }
             }
+        }
+
+        val currentPatient = state.patientState.dataOrNull()
+        if (showQrIntakeDialog && currentPatient != null) {
+            QrMedicalHistoryDialog(
+                patient = currentPatient,
+                currentHistory = state.medicalHistoryState.dataOrNull(),
+                onDismiss = { showQrIntakeDialog = false },
+                onSubmitNewHistory = { updated ->
+                    patientViewModel.updateMedicalHistory(updated)
+                }
+            )
         }
     }
 

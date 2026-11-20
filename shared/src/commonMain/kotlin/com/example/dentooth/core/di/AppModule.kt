@@ -16,6 +16,9 @@ import com.example.dentooth.feature.admin.settings.data.SettingsRepositoryImpl
 import com.example.dentooth.feature.admin.staff.data.StaffRepository
 import com.example.dentooth.feature.admin.staff.data.StaffRepositoryImpl
 import com.example.dentooth.feature.admin.staff.ui.StaffViewModel
+import com.example.dentooth.feature.automation.data.AutomationRepository
+import com.example.dentooth.feature.automation.data.AutomationRepositoryImpl
+import com.example.dentooth.feature.automation.ui.AutomationViewModel
 import com.example.dentooth.feature.billing.data.BillingRepository
 import com.example.dentooth.feature.billing.data.BillingRepositoryImpl
 import com.example.dentooth.feature.billing.ui.BillingViewModel
@@ -29,6 +32,12 @@ import com.example.dentooth.feature.dentalchart.ui.DentalChartViewModel
 import com.example.dentooth.feature.imaging.data.ImagingRepository
 import com.example.dentooth.feature.imaging.data.ImagingRepositoryImpl
 import com.example.dentooth.feature.imaging.ui.ImagingViewModel
+import com.example.dentooth.feature.insurance.data.InsuranceRepository
+import com.example.dentooth.feature.insurance.data.InsuranceRepositoryImpl
+import com.example.dentooth.feature.insurance.ui.InsuranceViewModel
+import com.example.dentooth.feature.lab.data.LabRepository
+import com.example.dentooth.feature.lab.data.LabRepositoryImpl
+import com.example.dentooth.feature.lab.ui.LabViewModel
 import com.example.dentooth.feature.patient.data.PatientRepository
 import com.example.dentooth.feature.patient.data.PatientRepositoryImpl
 import com.example.dentooth.feature.patient.ui.detail.PatientDetailViewModel
@@ -52,6 +61,9 @@ val dataModule = module {
     single<BranchRepository> { BranchRepositoryImpl() }
     single<SettingsRepository> { SettingsRepositoryImpl() }
     single<AnalyticsRepository> { AnalyticsRepositoryImpl() }
+    single<LabRepository> { LabRepositoryImpl() }
+    single<InsuranceRepository> { InsuranceRepositoryImpl() }
+    single<AutomationRepository> { AutomationRepositoryImpl() }
 }
 
 val viewModelModule = module {
@@ -68,6 +80,9 @@ val viewModelModule = module {
     factory { InventoryViewModel(get()) }
     factory { StaffViewModel(get()) }
     factory { AnalyticsViewModel(get()) }
+    factory { LabViewModel(get()) }
+    factory { InsuranceViewModel(get()) }
+    factory { AutomationViewModel(get()) }
 }
 
 val appModule = listOf(dataModule, viewModelModule)

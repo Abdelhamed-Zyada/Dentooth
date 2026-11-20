@@ -14,4 +14,6 @@ interface PatientRepository {
     suspend fun getMedicalHistory(patientId: String): Result<MedicalHistory>
     suspend fun saveMedicalHistory(history: MedicalHistory): Result<MedicalHistory>
     suspend fun getPatientGroups(): Result<List<PatientGroup>>
+    suspend fun savePatientGroup(group: PatientGroup): Result<PatientGroup>
+    suspend fun deletePatientGroup(id: String): Result<Unit>
 }
