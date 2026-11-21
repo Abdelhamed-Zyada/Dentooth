@@ -43,6 +43,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.example.dentooth.core.designsystem.components.DentoBrainLogo
 import com.example.dentooth.core.designsystem.components.DentoothFormField
 import com.example.dentooth.core.navigation.MainScreen
 
@@ -54,7 +55,7 @@ class LoginScreen : Screen {
         val viewModel = koinScreenModel<LoginViewModel>()
         val uiState by viewModel.uiState.collectAsState()
 
-        var email by remember { mutableStateOf("dr.ahmed@dentooth.com") }
+        var email by remember { mutableStateOf("dr.ahmed@dentobrain.app") }
         var password by remember { mutableStateOf("password123") }
 
         LaunchedEffect(uiState) {
@@ -75,31 +76,24 @@ class LoginScreen : Screen {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // App Logo Placeholder & Branding
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "🦷",
-                        fontSize = 40.sp
-                    )
-                }
+                // Primary App Logo & DentoBrain Branding
+                DentoBrainLogo(
+                    size = 96.dp,
+                    showWordmark = false,
+                    showTagline = false
+                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(18.dp))
 
                 Text(
-                    text = "Dentooth",
+                    text = "DentoBrain",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
-                    text = "Dental Clinic Management System",
+                    text = "The brain behind your dental practice",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

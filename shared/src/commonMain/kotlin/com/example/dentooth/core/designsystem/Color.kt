@@ -2,72 +2,99 @@ package com.example.dentooth.core.designsystem
 
 import androidx.compose.ui.graphics.Color
 
+/**
+ * DentoBrain Design System Color Tokens
+ * Rooted in Neural Intelligence (Navy/Lavender) & Clinical Precision (Teal/White).
+ */
 object DentoothColors {
-    // Brand Colors
-    val Primary = Color(0xFF1B6B93)
+    // Brand Colors - DentoBrain Identity
+    val NeuralNavy = Color(0xFF0A2540)
+    val SynapseTeal = Color(0xFF00B4D8)
+    val CortexLavender = Color(0xFF7B6CF6)
+    val ClinicalWhite = Color(0xFFF8FAFB)
+    val PulseCoral = Color(0xFFFF6B6B)
+    val RecallGreen = Color(0xFF2DD4BF)
+    val FabricationAmber = Color(0xFFFBBF24)
+    val SurfaceSlate = Color(0xFF1E293B)
+
+    // Primary Palette (Neural Navy)
+    val Primary = NeuralNavy
     val OnPrimary = Color(0xFFFFFFFF)
-    val PrimaryContainer = Color(0xFFC2E8FF)
-    val OnPrimaryContainer = Color(0xFF001E2C)
+    val PrimaryContainer = Color(0xFFD6E4F0)
+    val OnPrimaryContainer = Color(0xFF051728)
 
-    val Secondary = Color(0xFF4CAF50)
+    // Secondary Palette (Synapse Teal)
+    val Secondary = SynapseTeal
     val OnSecondary = Color(0xFFFFFFFF)
-    val SecondaryContainer = Color(0xFFD4F5D5)
-    val OnSecondaryContainer = Color(0xFF0B380E)
+    val SecondaryContainer = Color(0xFFD0F4FC)
+    val OnSecondaryContainer = Color(0xFF003642)
 
-    val Tertiary = Color(0xFFFF7043)
+    // Tertiary Palette (Cortex Lavender)
+    val Tertiary = CortexLavender
     val OnTertiary = Color(0xFFFFFFFF)
-    val TertiaryContainer = Color(0xFFFFDBCE)
-    val OnTertiaryContainer = Color(0xFF3B0900)
+    val TertiaryContainer = Color(0xFFECE9FE)
+    val OnTertiaryContainer = Color(0xFF261D63)
 
-    val Error = Color(0xFFD32F2F)
+    // Error Palette (Pulse Coral)
+    val Error = PulseCoral
     val OnError = Color(0xFFFFFFFF)
-    val ErrorContainer = Color(0xFFFFDAD6)
-    val OnErrorContainer = Color(0xFF410002)
+    val ErrorContainer = Color(0xFFFFE8E8)
+    val OnErrorContainer = Color(0xFF5A000A)
 
-    val Background = Color(0xFFF8F9FA)
-    val OnBackground = Color(0xFF191C1E)
+    // Neutral Surfaces & Backgrounds (Clinical White & Slate)
+    val Background = ClinicalWhite
+    val OnBackground = Color(0xFF0A1828)
     val Surface = Color(0xFFFFFFFF)
-    val OnSurface = Color(0xFF191C1E)
-    val SurfaceVariant = Color(0xFFE0E3E8)
-    val OnSurfaceVariant = Color(0xFF40484C)
-    val Outline = Color(0xFF70787D)
-    val OutlineVariant = Color(0xFFC0C7CD)
+    val OnSurface = Color(0xFF0A1828)
+    val SurfaceVariant = Color(0xFFEEF2F6)
+    val OnSurfaceVariant = Color(0xFF475569)
+    val Outline = Color(0xFF94A3B8)
+    val OutlineVariant = Color(0xFFCBD5E1)
 
     // Dark Mode Palette
-    val PrimaryDark = Color(0xFF74D1FF)
-    val OnPrimaryDark = Color(0xFF00354A)
-    val PrimaryContainerDark = Color(0xFF004D6B)
-    val OnPrimaryContainerDark = Color(0xFFC2E8FF)
+    val PrimaryDark = Color(0xFF38BDF8)
+    val OnPrimaryDark = Color(0xFF082F49)
+    val PrimaryContainerDark = Color(0xFF0C4A6E)
+    val OnPrimaryContainerDark = Color(0xFFBAE6FD)
 
-    val BackgroundDark = Color(0xFF111416)
-    val OnBackgroundDark = Color(0xFFE1E2E5)
-    val SurfaceDark = Color(0xFF191C1E)
-    val OnSurfaceDark = Color(0xFFE1E2E5)
-    val SurfaceVariantDark = Color(0xFF40484C)
-    val OnSurfaceVariantDark = Color(0xFFC0C7CD)
+    val SecondaryDark = SynapseTeal
+    val OnSecondaryDark = Color(0xFF003642)
+
+    val TertiaryDark = Color(0xFFA78BFA)
+    val OnTertiaryDark = Color(0xFF2E1065)
+
+    val BackgroundDark = Color(0xFF0B1320)
+    val OnBackgroundDark = Color(0xFFF1F5F9)
+    val SurfaceDark = Color(0xFF131F33)
+    val OnSurfaceDark = Color(0xFFF1F5F9)
+    val SurfaceVariantDark = SurfaceSlate
+    val OnSurfaceVariantDark = Color(0xFF94A3B8)
 
     // Semantic Appointment Status Colors
-    val StatusScheduled = Color(0xFF2196F3)
-    val StatusConfirmed = Color(0xFF4CAF50)
-    val StatusInProgress = Color(0xFFFF9800)
-    val StatusCompleted = Color(0xFF2E7D32)
-    val StatusCancelled = Color(0xFFE53935)
-    val StatusNoShow = Color(0xFF78909C)
+    val StatusScheduled = SynapseTeal
+    val StatusConfirmed = RecallGreen
+    val StatusInProgress = FabricationAmber
+    val StatusCompleted = Color(0xFF10B981)
+    val StatusCancelled = PulseCoral
+    val StatusNoShow = Color(0xFF64748B)
 
     // Semantic Financial Colors
-    val InvoicePaid = Color(0xFF2E7D32)
-    val InvoicePartial = Color(0xFFF57C00)
-    val InvoiceOverdue = Color(0xFFD32F2F)
-    val InvoiceDraft = Color(0xFF546E7A)
+    val InvoicePaid = Color(0xFF10B981)
+    val InvoicePartial = FabricationAmber
+    val InvoiceOverdue = PulseCoral
+    val InvoiceDraft = Color(0xFF64748B)
 
     // Dental Chart Tooth Colors
     val ToothHealthy = Color(0xFFFFFFFF)
-    val ToothHealthyBorder = Color(0xFF90A4AE)
-    val ToothCaries = Color(0xFFE53935)
-    val ToothFilled = Color(0xFF1E88E5)
-    val ToothCrown = Color(0xFFFFB300)
-    val ToothRootCanal = Color(0xFF8E24AA)
-    val ToothMissing = Color(0xFFCFD8DC)
-    val ToothImplant = Color(0xFF00897B)
-    val ToothSelected = Color(0xFF4FC3F7)
+    val ToothHealthyBorder = Color(0xFF94A3B8)
+    val ToothCaries = PulseCoral
+    val ToothFilled = SynapseTeal
+    val ToothCrown = FabricationAmber
+    val ToothRootCanal = CortexLavender
+    val ToothMissing = Color(0xFFCBD5E1)
+    val ToothImplant = RecallGreen
+    val ToothSelected = Color(0xFF38BDF8)
 }
+
+/** Alias to canonical brand name */
+val DentoBrainColors = DentoothColors

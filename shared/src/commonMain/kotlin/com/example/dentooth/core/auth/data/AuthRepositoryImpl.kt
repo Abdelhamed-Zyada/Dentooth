@@ -12,7 +12,7 @@ class AuthRepositoryImpl : AuthRepository {
     // Default pre-authenticated dev session for seamless development & testing
     private val defaultDevSession = UserSession(
         id = "usr-001",
-        email = "dr.ahmed@dentooth.com",
+        email = "dr.ahmed@dentobrain.app",
         fullName = "Dr. Ahmed Hassan",
         role = UserRole.ADMIN,
         clinicId = "cln-001",
@@ -45,7 +45,7 @@ class AuthRepositoryImpl : AuthRepository {
                 )
                 else -> UserSession(
                     id = "usr-001",
-                    email = trimmedEmail.ifEmpty { "dr.ahmed@dentooth.com" },
+                    email = trimmedEmail.ifEmpty { "dr.ahmed@dentobrain.app" },
                     fullName = "Dr. Ahmed Hassan",
                     role = UserRole.ADMIN,
                     clinicId = "cln-001",

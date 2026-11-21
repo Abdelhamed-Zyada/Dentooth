@@ -10,10 +10,10 @@ enum class ToothNotationSystem(val label: String, val description: String) {
 
 @Serializable
 data class ClinicSettings(
-    val clinicName: String = "Dentooth Dental Clinics",
+    val clinicName: String = "DentoBrain Dental Centers",
     val phone: String = "+20228192031",
-    val email: String = "contact@dentooth.com",
-    val website: String = "https://dentooth.com",
+    val email: String = "contact@dentobrain.app",
+    val website: String = "https://dentobrain.app",
     val address: String = "South 90th Street, Medical Park Premier, New Cairo",
     val taxRegistrationNumber: String = "492-108-320",
     val commercialLicense: String = "D-2024-CAIRO",

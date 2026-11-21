@@ -61,7 +61,7 @@ class AutomationRepositoryImpl : AutomationRepository {
             .replace("{branch_name}", "New Cairo Main")
             .replace("{time}", "5:30 PM")
             .replace("{amount}", "1,200")
-            .replace("{receipt_url}", "https://dentooth.app/inv/9012")
+            .replace("{receipt_url}", "https://dentobrain.app/inv/9012")
 
         val log = AutomationLog(
             id = "log_${kotlin.random.Random.nextInt(10000, 99999)}",
@@ -103,8 +103,8 @@ class AutomationRepositoryImpl : AutomationRepository {
             description = "Sends interactive WhatsApp/SMS 24 hours prior to appointment time requesting confirmation.",
             channel = AutomationChannel.WHATSAPP,
             isEnabled = true,
-            templateEnglish = "Dear {patient_name}, reminder of your dental appointment with {doctor_name} at Dentooth ({branch_name}) tomorrow at {time}. Reply 1 to confirm or 2 to reschedule.",
-            templateArabic = "أهلاً بك {patient_name}، نذكرك بموعدك بعيادة دينتوث ({branch_name}) غداً الساعة {time} مع {doctor_name}. لتأكيد الحضور أرسل 1 أو 2 للتأجيل.",
+            templateEnglish = "Dear {patient_name}, reminder of your dental appointment with {doctor_name} at DentoBrain ({branch_name}) tomorrow at {time}. Reply 1 to confirm or 2 to reschedule.",
+            templateArabic = "أهلاً بك {patient_name}، نذكرك بموعدك بعيادة دنتوبرين ({branch_name}) غداً الساعة {time} مع {doctor_name}. لتأكيد الحضور أرسل 1 أو 2 للتأجيل.",
             totalSentCount = 428,
             lastTriggeredAt = "Today, 09:00 AM"
         ),
@@ -115,8 +115,8 @@ class AutomationRepositoryImpl : AutomationRepository {
             description = "Dispatches SMS with branch GPS directions 2 hours prior to scheduled chair time.",
             channel = AutomationChannel.SMS,
             isEnabled = true,
-            templateEnglish = "Hi {patient_name}, we are preparing your dental suite! Your appointment starts in 2 hours at {branch_name}. Clinic GPS: https://maps.app.goo.gl/dentooth",
-            templateArabic = "مرحباً {patient_name}، نحن بانتظارك! موعدك اليوم بعد ساعتين بفرع {branch_name}. رابط موقع العيادة: https://maps.app.goo.gl/dentooth",
+            templateEnglish = "Hi {patient_name}, we are preparing your dental suite! Your appointment starts in 2 hours at {branch_name}. Clinic GPS: https://maps.app.goo.gl/dentobrain",
+            templateArabic = "مرحباً {patient_name}، نحن بانتظارك! موعدك اليوم بعد ساعتين بفرع {branch_name}. رابط موقع العيادة: https://maps.app.goo.gl/dentobrain",
             totalSentCount = 380,
             lastTriggeredAt = "Today, 01:00 PM"
         ),
@@ -139,8 +139,8 @@ class AutomationRepositoryImpl : AutomationRepository {
             description = "Dispatches festive WhatsApp greeting on patient birthday with 20% clinic voucher code.",
             channel = AutomationChannel.WHATSAPP,
             isEnabled = true,
-            templateEnglish = "Happy Birthday {patient_name}! 🎂 The Dentooth team wishes you a wonderful year. Enjoy a complimentary 20% celebration voucher on teeth whitening or cleaning valid this month! Code: BDAY20",
-            templateArabic = "كل عام وأنت بخير بمناسبة عيد ميلادك {patient_name}! 🎂 أسرة دينتوث تتمنى لك عاماً رائعاً، ويسعدنا تقديم قسيمة خصم 20% على تبييض أو تنظيف الأسنان طوال الشهر! كود: BDAY20",
+            templateEnglish = "Happy Birthday {patient_name}! 🎂 The DentoBrain team wishes you a wonderful year. Enjoy a complimentary 20% celebration voucher on teeth whitening or cleaning valid this month! Code: BDAY20",
+            templateArabic = "كل عام وأنت بخير بمناسبة عيد ميلادك {patient_name}! 🎂 أسرة دنتوبرين تتمنى لك عاماً رائعاً، ويسعدنا تقديم قسيمة خصم 20% على تبييض أو تنظيف الأسنان طوال الشهر! كود: BDAY20",
             totalSentCount = 95,
             lastTriggeredAt = "2 days ago"
         ),
@@ -151,8 +151,8 @@ class AutomationRepositoryImpl : AutomationRepository {
             description = "Re-engages patients who have not had a checkup in 6 months for preventive care.",
             channel = AutomationChannel.SMS,
             isEnabled = false,
-            templateEnglish = "Hi {patient_name}, it has been 6 months since your last dental cleaning! Keep your smile shining bright and book your routine prophylaxis checkup today at Dentooth.",
-            templateArabic = "أهلاً {patient_name}، مر 6 أشهر على آخر جلسة تنظيف أسنان وفحص! احرص على حماية ابتسامتك واحجز فحصك الدوري اليوم في دينتوث.",
+            templateEnglish = "Hi {patient_name}, it has been 6 months since your last dental cleaning! Keep your smile shining bright and book your routine prophylaxis checkup today at DentoBrain.",
+            templateArabic = "أهلاً {patient_name}، مر 6 أشهر على آخر جلسة تنظيف أسنان وفحص! احرص على حماية ابتسامتك واحجز فحصك الدوري اليوم في دنتوبرين.",
             totalSentCount = 210,
             lastTriggeredAt = "Nov 12, 2026"
         ),
@@ -175,8 +175,8 @@ class AutomationRepositoryImpl : AutomationRepository {
             description = "Sends digital receipt link immediately after any billing settlement.",
             channel = AutomationChannel.SMS,
             isEnabled = true,
-            templateEnglish = "Thank you {patient_name}. Payment of {amount} EGP received at Dentooth ({branch_name}). View digital receipt: {receipt_url}",
-            templateArabic = "شكراً لك {patient_name}. تم استلام دفعة بقيمة {amount} ج.م في عيادة دينتوث ({branch_name}). رابط الإيصال الإلكتروني: {receipt_url}",
+            templateEnglish = "Thank you {patient_name}. Payment of {amount} EGP received at DentoBrain ({branch_name}). View digital receipt: {receipt_url}",
+            templateArabic = "شكراً لك {patient_name}. تم استلام دفعة بقيمة {amount} ج.م في عيادة دنتوبرين ({branch_name}). رابط الإيصال الإلكتروني: {receipt_url}",
             totalSentCount = 512,
             lastTriggeredAt = "Today, 02:20 PM"
         )
@@ -191,7 +191,7 @@ class AutomationRepositoryImpl : AutomationRepository {
             patientName = "Omar Farouk",
             patientPhone = "+201012345678",
             channel = AutomationChannel.WHATSAPP,
-            messageContent = "Dear Omar Farouk, reminder of your dental appointment with Dr. Ahmed Mostafa at Dentooth (New Cairo Main) tomorrow at 4:30 PM. Reply 1 to confirm or 2 to reschedule.",
+            messageContent = "Dear Omar Farouk, reminder of your dental appointment with Dr. Ahmed Mostafa at DentoBrain (New Cairo Main) tomorrow at 4:30 PM. Reply 1 to confirm or 2 to reschedule.",
             status = AutomationLogStatus.READ,
             timestamp = "Today, 09:00 AM",
             costEstimateEgp = 0.85

@@ -57,6 +57,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.dentooth.core.designsystem.DentoothColors
+import com.example.dentooth.core.designsystem.components.DentoBrainLogo
 import com.example.dentooth.core.designsystem.components.DentoothAvatar
 import com.example.dentooth.core.designsystem.components.DentoothStatCard
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
@@ -89,7 +90,13 @@ class DashboardScreen : Screen {
         Scaffold(
             topBar = {
                 DentoothTopBar(
-                    title = "Dashboard",
+                    title = "DentoBrain",
+                    navigationIcon = {
+                        DentoBrainLogo(
+                            size = 36.dp,
+                            modifier = Modifier.padding(start = 12.dp, end = 4.dp)
+                        )
+                    },
                     actions = {
                         IconButton(onClick = { navigator.push(ClinicSettingsScreen()) }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")

@@ -20,6 +20,7 @@ fun DentoothTopBar(
     title: String,
     modifier: Modifier = Modifier,
     onBackClick: (() -> Unit)? = null,
+    navigationIcon: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
@@ -32,7 +33,9 @@ fun DentoothTopBar(
         },
         modifier = modifier,
         navigationIcon = {
-            if (onBackClick != null) {
+            if (navigationIcon != null) {
+                navigationIcon()
+            } else if (onBackClick != null) {
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,

@@ -76,7 +76,7 @@ fun QrMedicalHistoryDialog(
         return
     }
 
-    val intakeUrl = "https://dentooth.clinic/intake?token=${patient.id}-2026-auth"
+    val intakeUrl = "https://dentobrain.app/intake?token=${patient.id}-2026-auth"
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -245,7 +245,7 @@ private fun PatientMobileIntakeSheet(
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
                             Text(
-                                text = "Dentooth Mobile Patient Portal",
+                                text = "DentoBrain Mobile Patient Portal",
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer

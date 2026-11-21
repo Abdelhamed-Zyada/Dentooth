@@ -73,3 +73,10 @@ fun DentoothTheme(
         )
     }
 }
+
+/** Brand alias for DentoBrainTheme */
+@Composable
+fun DentoBrainTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) = DentoothTheme(darkTheme = darkTheme, content = content)
