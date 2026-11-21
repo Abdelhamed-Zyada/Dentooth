@@ -19,6 +19,7 @@ import com.example.dentooth.core.localization.LocalAppLanguage
 import com.example.dentooth.core.localization.LocalAppStrings
 import com.example.dentooth.core.localization.LocalizationManager
 import com.example.dentooth.core.navigation.MainScreen
+import com.example.dentooth.core.splash.SplashScreen
 import org.koin.compose.KoinApplication
 
 @Composable
@@ -37,7 +38,7 @@ fun App() {
         ) {
             DentoothTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Navigator(MainScreen()) { navigator ->
+                    Navigator(SplashScreen()) { navigator ->
                         SlideTransition(navigator)
                     }
                 }

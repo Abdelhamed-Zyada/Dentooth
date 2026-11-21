@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dentooth.core.localization.appStrings
 import dentooth.shared.generated.resources.Res
 import dentooth.shared.generated.resources.dentobrain_logo
 import org.jetbrains.compose.resources.painterResource
@@ -67,7 +68,7 @@ fun DentoBrainLogo(
         if (showWordmark) {
             Spacer(modifier = Modifier.height(14.dp))
             Text(
-                text = "DentoBrain",
+                text = appStrings.appName,
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = (-0.5).sp
@@ -79,7 +80,7 @@ fun DentoBrainLogo(
         if (showTagline) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "The brain behind your practice",
+                text = appStrings.tagline,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
