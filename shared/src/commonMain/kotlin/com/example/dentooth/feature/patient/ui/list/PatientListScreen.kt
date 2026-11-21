@@ -51,6 +51,7 @@ import com.example.dentooth.core.designsystem.components.DentoothLoadingState
 import com.example.dentooth.core.designsystem.components.DentoothSearchBar
 import com.example.dentooth.core.designsystem.components.DentoothStatusBadge
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
+import com.example.dentooth.core.localization.appStrings
 import com.example.dentooth.core.util.DateTimeUtil
 import com.example.dentooth.feature.patient.domain.model.Patient
 import com.example.dentooth.feature.patient.ui.detail.PatientDetailScreen
@@ -64,15 +65,16 @@ class PatientListScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = koinScreenModel<PatientListViewModel>()
         val state by viewModel.state.collectAsState()
+        val s = appStrings
         var showManageGroupsDialog by remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = {
                 DentoothTopBar(
-                    title = "Patients (${state.filteredPatients.size})",
+                    title = "${s.navPatients} (${state.filteredPatients.size})",
                     actions = {
                         IconButton(onClick = { showManageGroupsDialog = true }) {
-                            Icon(Icons.Default.Settings, contentDescription = "Manage Patient Groups")
+                            Icon(Icons.Default.Settings, contentDescription = s.manageGroupsButton)
                         }
                     }
                 )
@@ -83,7 +85,7 @@ class PatientListScreen : Screen {
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Patient")
+                    Icon(Icons.Default.Add, contentDescription = s.registerPatientButton)
                 }
             }
         ) { paddingValues ->
@@ -96,7 +98,8 @@ class PatientListScreen : Screen {
                 Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     DentoothSearchBar(
                         query = state.searchQuery,
-                        onQueryChange = { viewModel.onSearchQueryChanged(it) }
+                        onQueryChange = { viewModel.onSearchQueryChanged(it) },
+                        placeholder = s.searchPatientsPlaceholder
                     )
                 }
 
@@ -112,7 +115,7 @@ class PatientListScreen : Screen {
                         FilterChip(
                             selected = state.selectedGroup == null,
                             onClick = { viewModel.onGroupSelected(null) },
-                            label = { Text("All") },
+                            label = { Text(s.all) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = MaterialTheme.colorScheme.primaryContainer
                             )
@@ -130,19 +133,19 @@ class PatientListScreen : Screen {
                         FilterChip(
                             selected = false,
                             onClick = { showManageGroupsDialog = true },
-                            label = { Text("+ Groups") }
+                            label = { Text("+ ${s.manageGroupsButton}") }
                         )
                     }
                 }
 
                 // Patient List or Empty State
                 if (state.isLoading) {
-                    DentoothLoadingState(message = "Loading patients...")
+                    DentoothLoadingState(message = s.loading)
                 } else if (state.filteredPatients.isEmpty()) {
                     DentoothEmptyState(
-                        title = "No patients found",
-                        message = if (state.searchQuery.isNotBlank()) "No patients matching \"${state.searchQuery}\"" else "Your clinic has no registered patients yet.",
-                        actionLabel = if (state.searchQuery.isBlank()) "Register First Patient" else null,
+                        title = s.noPatientsFound,
+                        message = if (state.searchQuery.isNotBlank()) "${s.noPatientsFound}: \"${state.searchQuery}\"" else s.noData,
+                        actionLabel = if (state.searchQuery.isBlank()) s.registerPatientButton else null,
                         onAction = { navigator.push(PatientFormScreen()) }
                     )
                 } else {
@@ -182,6 +185,7 @@ class PatientListScreen : Screen {
         patient: Patient,
         onClick: () -> Unit
     ) {
+        val s = appStrings
         val age = patient.dateOfBirth?.let { DateTimeUtil.calculateAge(it) }
 
         Card(
@@ -227,7 +231,7 @@ class PatientListScreen : Screen {
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = "${patient.gender.displayName}${if (age != null) " • $age yrs" else ""} • ${patient.phone}",
+                        text = "${patient.gender.displayName}${if (age != null) " • $age ${s.yearsUnit}" else ""} • ${patient.phone}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

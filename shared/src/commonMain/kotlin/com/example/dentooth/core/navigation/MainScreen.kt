@@ -19,6 +19,8 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 
+import com.example.dentooth.core.localization.appStrings
+
 class MainScreen : Screen {
 
     @Composable
@@ -51,18 +53,26 @@ class MainScreen : Screen {
     @Composable
     private fun RowScope.TabNavigationItem(tab: Tab) {
         val tabNavigator = LocalTabNavigator.current
+        val s = appStrings
+        val localizedTitle = when (tab) {
+            is DashboardTab -> s.navDashboard
+            is PatientsTab -> s.navPatients
+            is CalendarTab -> s.navCalendar
+            is BillingTab -> s.navBilling
+            else -> tab.options.title
+        }
 
         NavigationBarItem(
             selected = tabNavigator.current == tab,
             onClick = { tabNavigator.current = tab },
             icon = {
                 tab.options.icon?.let { icon ->
-                    Icon(painter = icon, contentDescription = tab.options.title)
+                    Icon(painter = icon, contentDescription = localizedTitle)
                 }
             },
             label = {
                 Text(
-                    text = tab.options.title,
+                    text = localizedTitle,
                     style = MaterialTheme.typography.labelMedium
                 )
             },

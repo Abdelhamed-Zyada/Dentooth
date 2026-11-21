@@ -47,6 +47,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.example.dentooth.core.designsystem.components.DentoothLoadingState
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
+import com.example.dentooth.core.localization.appStrings
 import com.example.dentooth.core.util.DateTimeUtil
 import com.example.dentooth.feature.calendar.domain.model.AppointmentStatus
 import com.example.dentooth.feature.calendar.ui.components.AgendaView
@@ -63,6 +64,7 @@ class CalendarScreen : Screen {
     override fun Content() {
         val viewModel = koinScreenModel<CalendarViewModel>()
         val state by viewModel.uiState.collectAsState()
+        val s = appStrings
         val snackbarHostState = remember { SnackbarHostState() }
 
         LaunchedEffect(state.errorMessage) {
@@ -77,10 +79,10 @@ class CalendarScreen : Screen {
             topBar = {
                 Column {
                     DentoothTopBar(
-                        title = "Calendar & Reservations",
+                        title = s.calendarHeader,
                         actions = {
                             TextButton(onClick = { viewModel.goToToday() }) {
-                                Text("Today", fontWeight = FontWeight.Bold)
+                                Text(s.today, fontWeight = FontWeight.Bold)
                             }
                         }
                     )
@@ -94,22 +96,22 @@ class CalendarScreen : Screen {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(onClick = { viewModel.previousDate() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = s.previous)
                         }
 
                         Text(
                             text = when (state.viewMode) {
                                 CalendarViewMode.DAY -> DateTimeUtil.formatDate(state.selectedDate)
-                                CalendarViewMode.WEEK -> "Week of ${DateTimeUtil.formatDate(state.selectedDate)}"
+                                CalendarViewMode.WEEK -> "${s.weekOf} ${DateTimeUtil.formatDate(state.selectedDate)}"
                                 CalendarViewMode.MONTH -> "${getMonthName(state.selectedDate.monthNumber)} ${state.selectedDate.year}"
-                                CalendarViewMode.AGENDA -> "Schedule Agenda"
+                                CalendarViewMode.AGENDA -> s.scheduleAgenda
                             },
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
 
                         IconButton(onClick = { viewModel.nextDate() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next")
+                            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = s.next)
                         }
                     }
 
@@ -119,10 +121,16 @@ class CalendarScreen : Screen {
                         containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         CalendarViewMode.entries.forEach { mode ->
+                            val modeTitle = when (mode) {
+                                CalendarViewMode.DAY -> s.viewDay
+                                CalendarViewMode.WEEK -> s.viewWeek
+                                CalendarViewMode.MONTH -> s.viewMonth
+                                CalendarViewMode.AGENDA -> s.scheduleAgenda
+                            }
                             Tab(
                                 selected = state.viewMode == mode,
                                 onClick = { viewModel.setViewMode(mode) },
-                                text = { Text(mode.title, fontWeight = FontWeight.SemiBold) }
+                                text = { Text(modeTitle, fontWeight = FontWeight.SemiBold) }
                             )
                         }
                     }
@@ -141,12 +149,12 @@ class CalendarScreen : Screen {
                             FilterChip(
                                 selected = state.columnMode == CalendarColumnMode.BY_CHAIR,
                                 onClick = { viewModel.setColumnMode(CalendarColumnMode.BY_CHAIR) },
-                                label = { Text("By Chair") }
+                                label = { Text(s.byChair) }
                             )
                             FilterChip(
                                 selected = state.columnMode == CalendarColumnMode.BY_DOCTOR,
                                 onClick = { viewModel.setColumnMode(CalendarColumnMode.BY_DOCTOR) },
-                                label = { Text("By Doctor") }
+                                label = { Text(s.byDoctor) }
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                         }
@@ -155,7 +163,7 @@ class CalendarScreen : Screen {
                         FilterChip(
                             selected = state.doctorFilterId == null,
                             onClick = { viewModel.setDoctorFilter(null) },
-                            label = { Text("All Doctors") }
+                            label = { Text(s.allDoctors) }
                         )
                         state.doctors.forEach { doc ->
                             FilterChip(
@@ -171,15 +179,23 @@ class CalendarScreen : Screen {
                         FilterChip(
                             selected = state.statusFilter == null,
                             onClick = { viewModel.setStatusFilter(null) },
-                            label = { Text("All Statuses") }
+                            label = { Text(s.allStatuses) }
                         )
                         AppointmentStatus.entries.forEach { status ->
+                            val statusLabel = when (status) {
+                                AppointmentStatus.SCHEDULED -> s.statusScheduled
+                                AppointmentStatus.CONFIRMED -> s.statusConfirmed
+                                AppointmentStatus.IN_PROGRESS -> s.statusInProgress
+                                AppointmentStatus.COMPLETED -> s.statusCompleted
+                                AppointmentStatus.CANCELLED -> s.statusCancelled
+                                AppointmentStatus.NO_SHOW -> s.statusNoShow
+                            }
                             FilterChip(
                                 selected = state.statusFilter == status,
                                 onClick = {
                                     viewModel.setStatusFilter(if (state.statusFilter == status) null else status)
                                 },
-                                label = { Text(status.label) }
+                                label = { Text(statusLabel) }
                             )
                         }
                     }
@@ -193,7 +209,7 @@ class CalendarScreen : Screen {
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = "Book Appointment")
+                    Icon(Icons.Default.Add, contentDescription = s.btnNewAppointment)
                 }
             }
         ) { paddingValues ->
@@ -203,7 +219,7 @@ class CalendarScreen : Screen {
                     .padding(paddingValues)
             ) {
                 if (state.appointments.isLoading) {
-                    DentoothLoadingState(message = "Loading schedule...")
+                    DentoothLoadingState(message = s.loading)
                 } else {
                     val apts = state.appointments.dataOrNull() ?: emptyList()
 

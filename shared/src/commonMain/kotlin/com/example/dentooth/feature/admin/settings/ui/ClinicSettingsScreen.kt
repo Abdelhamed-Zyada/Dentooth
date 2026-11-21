@@ -44,6 +44,11 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
+import com.example.dentooth.core.localization.AppLanguage
+import com.example.dentooth.core.localization.LocalAppLanguage
+import com.example.dentooth.core.localization.LocalizationManager
+import com.example.dentooth.core.localization.appStrings
+import com.example.dentooth.core.localization.ui.LanguageToggleButton
 import com.example.dentooth.feature.admin.settings.data.SettingsRepository
 import com.example.dentooth.feature.admin.settings.domain.model.ClinicSettings
 import com.example.dentooth.feature.admin.settings.domain.model.ToothNotationSystem
@@ -61,6 +66,8 @@ class ClinicSettingsScreen : Screen, KoinComponent {
 
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
+        val s = appStrings
+        val currentLang = LocalAppLanguage.current
 
         var clinicName by remember(initialSettings) { mutableStateOf(initialSettings.clinicName) }
         var phone by remember(initialSettings) { mutableStateOf(initialSettings.phone) }
@@ -77,8 +84,11 @@ class ClinicSettingsScreen : Screen, KoinComponent {
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 DentoothTopBar(
-                    title = "Clinic Settings",
-                    onBackClick = { navigator.pop() }
+                    title = s.tileSettings,
+                    onBackClick = { navigator.pop() },
+                    actions = {
+                        LanguageToggleButton()
+                    }
                 )
             }
         ) { paddingValues ->
@@ -274,6 +284,40 @@ class ClinicSettingsScreen : Screen, KoinComponent {
                     }
                 }
 
+                // Application Language & Localization Card
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = s.languageSetting,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            FilterChip(
+                                selected = currentLang == AppLanguage.ENGLISH,
+                                onClick = { LocalizationManager.setLanguage(AppLanguage.ENGLISH) },
+                                label = { Text(s.languageEnglish) }
+                            )
+
+                            FilterChip(
+                                selected = currentLang == AppLanguage.ARABIC,
+                                onClick = { LocalizationManager.setLanguage(AppLanguage.ARABIC) },
+                                label = { Text(s.languageArabic) }
+                            )
+                        }
+                    }
+                }
+
                 // Save Button
                 Button(
                     onClick = {
@@ -291,15 +335,15 @@ class ClinicSettingsScreen : Screen, KoinComponent {
                                 autoSendLabOnTreatment = labAutoSend
                             )
                             settingsRepo.updateSettings(updated)
-                            snackbarHostState.showSnackbar("Clinic settings saved successfully!")
+                            snackbarHostState.showSnackbar(s.success)
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = "Save", modifier = Modifier.padding(end = 6.dp))
-                    Text("Save Clinic Settings")
+                    Icon(Icons.Default.Check, contentDescription = s.save, modifier = Modifier.padding(end = 6.dp))
+                    Text(s.save)
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

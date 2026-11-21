@@ -26,19 +26,21 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.dentooth.core.designsystem.components.DentoothFormField
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
+import com.example.dentooth.core.localization.appStrings
 
 class ForgotPasswordScreen : Screen {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val s = appStrings
         var email by remember { mutableStateOf("") }
         var submitted by remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = {
                 DentoothTopBar(
-                    title = "Reset Password",
+                    title = s.forgotPassword,
                     onBackClick = { navigator.pop() }
                 )
             }
@@ -50,7 +52,7 @@ class ForgotPasswordScreen : Screen {
                     .padding(24.dp)
             ) {
                 Text(
-                    text = "Enter your clinic email address and we'll send you instructions to reset your password.",
+                    text = s.resetLinkSentSuccess,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -60,7 +62,7 @@ class ForgotPasswordScreen : Screen {
                 DentoothFormField(
                     value = email,
                     onValueChange = { email = it },
-                    label = "Email Address",
+                    label = s.emailLabel,
                     keyboardType = KeyboardType.Email,
                     leadingIcon = {
                         Icon(Icons.Default.Email, contentDescription = null)
@@ -76,7 +78,7 @@ class ForgotPasswordScreen : Screen {
                         .height(50.dp),
                     shape = MaterialTheme.shapes.medium
                 ) {
-                    Text(if (submitted) "Instructions Sent!" else "Send Reset Link")
+                    Text(if (submitted) s.success else s.sendResetLink)
                 }
             }
         }

@@ -26,6 +26,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.example.dentooth.core.designsystem.components.DentoothLoadingState
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
+import com.example.dentooth.core.localization.appStrings
 import com.example.dentooth.feature.billing.ui.components.AddExpenseDialog
 import com.example.dentooth.feature.billing.ui.components.ExpensesTab
 import com.example.dentooth.feature.billing.ui.components.FinancialOverviewTab
@@ -40,6 +41,7 @@ class BillingScreen : Screen {
     override fun Content() {
         val viewModel = koinScreenModel<BillingViewModel>()
         val state by viewModel.uiState.collectAsState()
+        val s = appStrings
         val snackbarHostState = remember { SnackbarHostState() }
 
         LaunchedEffect(state.errorMessage) {
@@ -54,7 +56,7 @@ class BillingScreen : Screen {
             topBar = {
                 Column {
                     DentoothTopBar(
-                        title = "Billing & Financials"
+                        title = s.billingHeader
                     )
 
                     PrimaryTabRow(
@@ -62,10 +64,15 @@ class BillingScreen : Screen {
                         containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         BillingTabMode.entries.forEach { tab ->
+                            val tabTitle = when (tab) {
+                                BillingTabMode.INVOICES -> s.tabInvoices
+                                BillingTabMode.EXPENSES -> s.tabExpenses
+                                BillingTabMode.OVERVIEW -> s.tabFinancialSummary
+                            }
                             Tab(
                                 selected = state.activeTab == tab,
                                 onClick = { viewModel.setActiveTab(tab) },
-                                text = { Text(tab.title, fontWeight = FontWeight.SemiBold) }
+                                text = { Text(tabTitle, fontWeight = FontWeight.SemiBold) }
                             )
                         }
                     }
@@ -79,7 +86,7 @@ class BillingScreen : Screen {
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = "New Invoice")
+                            Icon(Icons.Default.Add, contentDescription = s.btnNewInvoice)
                         }
                     }
                     BillingTabMode.EXPENSES -> {
@@ -88,7 +95,7 @@ class BillingScreen : Screen {
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = "Add Expense")
+                            Icon(Icons.Default.Add, contentDescription = s.btnAddExpense)
                         }
                     }
                     BillingTabMode.OVERVIEW -> {}
@@ -103,7 +110,7 @@ class BillingScreen : Screen {
                 when (state.activeTab) {
                     BillingTabMode.INVOICES -> {
                         if (state.invoices.isLoading) {
-                            DentoothLoadingState(message = "Loading invoices...")
+                            DentoothLoadingState(message = s.loading)
                         } else {
                             InvoicesTab(
                                 invoices = state.invoices.dataOrNull() ?: emptyList(),
@@ -119,7 +126,7 @@ class BillingScreen : Screen {
                     }
                     BillingTabMode.EXPENSES -> {
                         if (state.expenses.isLoading) {
-                            DentoothLoadingState(message = "Loading expenses...")
+                            DentoothLoadingState(message = s.loading)
                         } else {
                             ExpensesTab(
                                 expenses = state.expenses.dataOrNull() ?: emptyList(),
@@ -129,7 +136,7 @@ class BillingScreen : Screen {
                     }
                     BillingTabMode.OVERVIEW -> {
                         if (state.summary.isLoading) {
-                            DentoothLoadingState(message = "Loading financial report...")
+                            DentoothLoadingState(message = s.loading)
                         } else {
                             FinancialOverviewTab(
                                 summary = state.summary.dataOrNull()

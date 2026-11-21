@@ -61,6 +61,8 @@ import com.example.dentooth.core.designsystem.components.DentoBrainLogo
 import com.example.dentooth.core.designsystem.components.DentoothAvatar
 import com.example.dentooth.core.designsystem.components.DentoothStatCard
 import com.example.dentooth.core.designsystem.components.DentoothTopBar
+import com.example.dentooth.core.localization.appStrings
+import com.example.dentooth.core.localization.ui.LanguageToggleButton
 import com.example.dentooth.core.util.DateTimeUtil
 import com.example.dentooth.feature.admin.analytics.ui.AnalyticsScreen
 import com.example.dentooth.feature.admin.branch.ui.BranchSelectorSheet
@@ -80,17 +82,18 @@ class DashboardScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = koinScreenModel<DashboardViewModel>()
         val state by viewModel.state.collectAsState()
+        val s = appStrings
 
         var showBranchSelector by remember { mutableStateOf(false) }
 
-        val userName = state.userSession?.fullName ?: "Doctor"
+        val userName = state.userSession?.fullName ?: s.doctor
         val todayStr = DateTimeUtil.formatDate(DateTimeUtil.today())
-        val activeBranchName = state.activeBranch?.name ?: "Main Clinic (New Cairo)"
+        val activeBranchName = state.activeBranch?.name ?: s.mainClinic
 
         Scaffold(
             topBar = {
                 DentoothTopBar(
-                    title = "DentoBrain",
+                    title = s.appName,
                     navigationIcon = {
                         DentoBrainLogo(
                             size = 36.dp,
@@ -98,8 +101,9 @@ class DashboardScreen : Screen {
                         )
                     },
                     actions = {
+                        LanguageToggleButton()
                         IconButton(onClick = { navigator.push(ClinicSettingsScreen()) }) {
-                            Icon(Icons.Default.Settings, contentDescription = "Settings")
+                            Icon(Icons.Default.Settings, contentDescription = s.tileSettings)
                         }
                     }
                 )
@@ -121,7 +125,7 @@ class DashboardScreen : Screen {
                 ) {
                     Column {
                         Text(
-                            text = "Good morning,",
+                            text = s.goodMorning,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -147,7 +151,7 @@ class DashboardScreen : Screen {
                             ) {
                                 Icon(
                                     Icons.Default.LocationOn,
-                                    contentDescription = "Branch",
+                                    contentDescription = s.branchSelector,
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(14.dp)
                                 )
@@ -177,7 +181,7 @@ class DashboardScreen : Screen {
                     ) {
                         Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("New Patient")
+                        Text(s.btnNewPatient)
                     }
                     OutlinedButton(
                         onClick = { navigator.push(PatientFormScreen()) },
@@ -186,13 +190,13 @@ class DashboardScreen : Screen {
                     ) {
                         Icon(Icons.Default.DateRange, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Add Intake")
+                        Text(s.btnAddIntake)
                     }
                 }
 
                 // Administration Module Shortcuts Row
                 Text(
-                    text = "Clinic Administration",
+                    text = s.clinicAdminSection,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -205,36 +209,36 @@ class DashboardScreen : Screen {
                 ) {
                     AdminQuickTile(
                         icon = "📦",
-                        title = "Inventory",
-                        subtitle = "${state.lowStockItemsCount} low stock",
+                        title = s.tileInventory,
+                        subtitle = "${state.lowStockItemsCount} ${s.lowStock}",
                         onClick = { navigator.push(InventoryScreen()) }
                     )
 
                     AdminQuickTile(
                         icon = "👥",
-                        title = "Staff & Team",
-                        subtitle = "Attendance",
+                        title = s.tileStaff,
+                        subtitle = s.tileStaffSubtitle,
                         onClick = { navigator.push(StaffScreen()) }
                     )
 
                     AdminQuickTile(
                         icon = "📊",
-                        title = "Analytics",
-                        subtitle = "KPI Reports",
+                        title = s.tileAnalytics,
+                        subtitle = s.tileAnalyticsSubtitle,
                         onClick = { navigator.push(AnalyticsScreen()) }
                     )
 
                     AdminQuickTile(
                         icon = "⚙️",
-                        title = "Settings",
-                        subtitle = "Clinic Setup",
+                        title = s.tileSettings,
+                        subtitle = s.tileSettingsSubtitle,
                         onClick = { navigator.push(ClinicSettingsScreen()) }
                     )
                 }
 
                 // Operations & Patient Engagement Shortcuts Row
                 Text(
-                    text = "Engagement & Operations",
+                    text = s.operationsEngagementSection,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -247,22 +251,22 @@ class DashboardScreen : Screen {
                 ) {
                     AdminQuickTile(
                         icon = "🧪",
-                        title = "Dental Labs",
-                        subtitle = "Orders & Fabrication",
+                        title = s.tileLabs,
+                        subtitle = s.tileLabsSubtitle,
                         onClick = { navigator.push(LabScreen()) }
                     )
 
                     AdminQuickTile(
                         icon = "🛡️",
-                        title = "Insurance",
-                        subtitle = "Claims & Approvals",
+                        title = s.tileInsurance,
+                        subtitle = s.tileInsuranceSubtitle,
                         onClick = { navigator.push(InsuranceScreen()) }
                     )
 
                     AdminQuickTile(
                         icon = "⚡",
-                        title = "Automations",
-                        subtitle = "SMS & WhatsApp",
+                        title = s.tileAutomations,
+                        subtitle = s.tileAutomationsSubtitle,
                         onClick = { navigator.push(AutomationScreen()) }
                     )
                 }
@@ -273,15 +277,15 @@ class DashboardScreen : Screen {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     DentoothStatCard(
-                        title = "Today's Appts",
+                        title = s.todayAppointmentsCount,
                         value = "${state.todayAppointmentsCount}",
                         icon = Icons.Default.DateRange,
                         iconTint = DentoothColors.StatusScheduled,
                         modifier = Modifier.weight(1f)
                     )
                     DentoothStatCard(
-                        title = "Today's Revenue",
-                        value = "EGP ${formatNumber(state.todayRevenue)}",
+                        title = s.todayRevenue,
+                        value = "${s.currency} ${formatNumber(state.todayRevenue)}",
                         icon = Icons.Default.ShoppingCart,
                         iconTint = Color(0xFF2E7D32),
                         modifier = Modifier.weight(1f)
@@ -293,14 +297,14 @@ class DashboardScreen : Screen {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     DentoothStatCard(
-                        title = "Total Patients",
+                        title = s.totalPatients,
                         value = "${state.totalPatients}",
                         icon = Icons.Default.Person,
                         iconTint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f)
                     )
                     DentoothStatCard(
-                        title = "Pending Invoices",
+                        title = s.pendingInvoicesCount,
                         value = "${state.pendingInvoicesCount}",
                         icon = Icons.Default.ShoppingCart,
                         iconTint = Color(0xFFE65100),
@@ -325,9 +329,9 @@ class DashboardScreen : Screen {
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(38.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(0xFFFFB74D)),
+                                .size(38.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFFFB74D)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text("⚠️", fontSize = 18.sp)
@@ -335,13 +339,13 @@ class DashboardScreen : Screen {
                             Spacer(modifier = Modifier.width(12.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Inventory Reorder Alert (${state.lowStockItemsCount} Items)",
+                                    text = "${s.inventoryAlertTitle} (${state.lowStockItemsCount} ${s.items})",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold,
                                     color = Color(0xFFBF360C)
                                 )
                                 Text(
-                                    text = "Tap to review stock levels and supplier reorder lists.",
+                                    text = s.inventoryAlertSubtitle,
                                     style = MaterialTheme.typography.bodySmall,
                                     color = Color(0xFFE65100)
                                 )
@@ -357,7 +361,7 @@ class DashboardScreen : Screen {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Today's Schedule (${state.todayAppointments.size})",
+                        text = "${s.todaySchedule} (${state.todayAppointments.size})",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -378,7 +382,7 @@ class DashboardScreen : Screen {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No appointments scheduled for today",
+                            text = s.noAppointmentsToday,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -408,6 +412,7 @@ class DashboardScreen : Screen {
 
     @Composable
     private fun LiveAppointmentItemCard(appt: Appointment) {
+        val s = appStrings
         val statusColor = appt.displayColor
 
         Card(
@@ -433,7 +438,7 @@ class DashboardScreen : Screen {
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "• ${appt.chairName ?: "General Chair"}",
+                            text = "• ${appt.chairName ?: s.generalChair}",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

@@ -14,15 +14,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.dentooth.core.localization.appStrings
 
 @Composable
 fun DentoothSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "Search patients by name, phone, or ID...",
+    placeholder: String = appStrings.searchPatientsPlaceholder,
     onClear: () -> Unit = { onQueryChange("") }
 ) {
+    val s = appStrings
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
@@ -37,7 +39,7 @@ fun DentoothSearchBar(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = s.search,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
@@ -46,7 +48,7 @@ fun DentoothSearchBar(
                 IconButton(onClick = onClear) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Clear search",
+                        contentDescription = s.clear,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

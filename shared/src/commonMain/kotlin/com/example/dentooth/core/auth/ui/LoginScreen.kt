@@ -45,6 +45,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.dentooth.core.designsystem.components.DentoBrainLogo
 import com.example.dentooth.core.designsystem.components.DentoothFormField
+import com.example.dentooth.core.localization.appStrings
+import com.example.dentooth.core.localization.ui.LanguageToggleButton
 import com.example.dentooth.core.navigation.MainScreen
 
 class LoginScreen : Screen {
@@ -54,6 +56,7 @@ class LoginScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = koinScreenModel<LoginViewModel>()
         val uiState by viewModel.uiState.collectAsState()
+        val s = appStrings
 
         var email by remember { mutableStateOf("dr.ahmed@dentobrain.app") }
         var password by remember { mutableStateOf("password123") }
@@ -76,6 +79,16 @@ class LoginScreen : Screen {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                // Language Switcher Toggle Pill
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    LanguageToggleButton()
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 // Primary App Logo & DentoBrain Branding
                 DentoBrainLogo(
                     size = 96.dp,
@@ -86,14 +99,14 @@ class LoginScreen : Screen {
                 Spacer(modifier = Modifier.height(18.dp))
 
                 Text(
-                    text = "DentoBrain",
+                    text = s.appName,
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
-                    text = "The brain behind your dental practice",
+                    text = s.tagline,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -107,7 +120,7 @@ class LoginScreen : Screen {
                         email = it
                         viewModel.clearError()
                     },
-                    label = "Email Address",
+                    label = s.emailLabel,
                     keyboardType = KeyboardType.Email,
                     leadingIcon = {
                         Icon(Icons.Default.Email, contentDescription = null)
@@ -123,7 +136,7 @@ class LoginScreen : Screen {
                         password = it
                         viewModel.clearError()
                     },
-                    label = "Password",
+                    label = s.passwordLabel,
                     keyboardType = KeyboardType.Password,
                     visualTransformation = PasswordVisualTransformation(),
                     leadingIcon = {
@@ -159,7 +172,7 @@ class LoginScreen : Screen {
                         )
                     } else {
                         Text(
-                            text = "Sign In",
+                            text = s.signInButton,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -172,7 +185,7 @@ class LoginScreen : Screen {
                     onClick = { navigator.push(ForgotPasswordScreen()) }
                 ) {
                     Text(
-                        text = "Forgot password?",
+                        text = s.forgotPassword,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
