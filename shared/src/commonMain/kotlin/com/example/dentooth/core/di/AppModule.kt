@@ -2,6 +2,7 @@ package com.example.dentooth.core.di
 
 import com.example.dentooth.core.auth.data.AuthRepository
 import com.example.dentooth.core.auth.data.AuthRepositoryImpl
+import com.example.dentooth.core.auth.data.SupabaseAuthRepositoryImpl
 import com.example.dentooth.core.auth.ui.LoginViewModel
 import com.example.dentooth.feature.admin.analytics.data.AnalyticsRepository
 import com.example.dentooth.feature.admin.analytics.data.AnalyticsRepositoryImpl
@@ -40,6 +41,7 @@ import com.example.dentooth.feature.lab.data.LabRepositoryImpl
 import com.example.dentooth.feature.lab.ui.LabViewModel
 import com.example.dentooth.feature.patient.data.PatientRepository
 import com.example.dentooth.feature.patient.data.PatientRepositoryImpl
+import com.example.dentooth.feature.patient.data.SupabasePatientRepositoryImpl
 import com.example.dentooth.feature.patient.ui.detail.PatientDetailViewModel
 import com.example.dentooth.feature.patient.ui.form.PatientFormViewModel
 import com.example.dentooth.feature.patient.ui.list.PatientListViewModel
@@ -49,8 +51,8 @@ import com.example.dentooth.feature.treatment.ui.TreatmentViewModel
 import org.koin.dsl.module
 
 val dataModule = module {
-    single<AuthRepository> { AuthRepositoryImpl() }
-    single<PatientRepository> { PatientRepositoryImpl() }
+    single<AuthRepository> { SupabaseAuthRepositoryImpl() }
+    single<PatientRepository> { SupabasePatientRepositoryImpl() }
     single<DentalChartRepository> { DentalChartRepositoryImpl() }
     single<TreatmentRepository> { TreatmentRepositoryImpl() }
     single<ImagingRepository> { ImagingRepositoryImpl() }
